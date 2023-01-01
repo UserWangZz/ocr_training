@@ -41,15 +41,26 @@ Loss:
   beta: 10
   ohem_ratio: 3
 
+#Optimizer:
+#  name: Adam
+#  beta1: 0.9
+#  beta2: 0.999
+#  lr:
+#    learning_rate: 0.001
+#  regularizer:
+#    name: 'L2'
+#    factor: 0
+
 Optimizer:
-  name: Adam
-  beta1: 0.9
-  beta2: 0.999
-  lr:
-    learning_rate: 0.001
-  regularizer:
-    name: 'L2'
-    factor: 0
+  type: Adam
+  args:
+    lr: 0.001
+    weight_decay: 0
+    amsgrad: true
+  lr_scheduler:
+    type: WarmupPolyLR
+    args:
+      warmup_epoch: 3
 
 PostProcess:
   name: DBPostProcess

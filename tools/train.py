@@ -53,6 +53,11 @@ def main(config, device, logger, log_writer):
         logger.info('valid dataloader has {} iters'.format(
             len(valid_dataloader)))
 
+    # start train
+    program.train(config, train_dataloader, valid_dataloader, device,
+                  model, loss_class, post_porcess_class, eval_class,
+                  logger, config['Global']['use_tensorboard'])
+
 
 if __name__ == '__main__':
     # 预处理，读取config文件，构造config，log以及log_writer
