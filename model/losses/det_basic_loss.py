@@ -31,6 +31,43 @@ class BalanceLoss(nn.Module):
             ]
             raise Exception("main_loss_type in BalanceLoss() can only be one of {}".format(loss_type))
 
+    def forward(self, pred, gt, mask=None):
+        """
+        The BalanceLoss for Differentiable Binarization text detection
+        args:
+            pred (variable): predicted feature maps.
+            gt (variable): ground truth feature maps.
+            mask (variable): masked maps.
+        return: (variable) balanced loss
+        """
+        positive = gt * mask
+        negative = (1 - gt) * mask
+
+        positive_count = int(positive.sum())
+        negative_count = int(
+            min(negative.sum(), positive_count * self.negative_ratio))
+        loss = self.loss(pred, gt, mask=mask)
+
+        if not self.balance_loss:
+            return loss
+
+        positive_loss = positive * loss
+        negative_loss = negative * loss
+        negative_loss = torch.reshape(negative_loss, shape=[-1])
+        if negative_count > 0:
+            sort_loss = negative_loss.sort(descending=True)
+            negative_loss = sort_loss[:negative_count]
+            negative_loss = torch.stack(list(negative_loss))
+            # negative_loss, _ = paddle.topk(negative_loss, k=negative_count_int)
+            balance_loss = (positive_loss.sum() + negative_loss.sum()) / (
+                    positive_count + negative_count + self.eps)
+        else:
+            balance_loss = positive_loss.sum() / (positive_count + self.eps)
+        if self.return_origin:
+            return balance_loss, loss
+
+        return balance_loss
+
 
 class DiceLoss(nn.Module):
     def __init__(self, eps=1e-6):

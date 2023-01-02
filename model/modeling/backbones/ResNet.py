@@ -96,7 +96,7 @@ class ResNet(nn.Module):
     def forward(self, x):
         x = F.relu(self.MaxPool(self.bn1(self.conv1(x))))
         out = []
-        print(x.shape)
+        # print(x.shape)
         x = self.layer1(x)
         # self.out_channels.append(x.shape[1])
         out.append(x)

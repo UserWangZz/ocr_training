@@ -22,7 +22,6 @@ def main(config, device, logger, log_writer):
     global_config = config['Global']
     # 构建dataloader
     train_dataloader = build_dataloader(config, 'Train', device, logger, config['Global']['seed'])
-    print(len(train_dataloader))
     if len(train_dataloader) == 0:
         logger.error(
             "No Images in train dataset, please ensure\n" +

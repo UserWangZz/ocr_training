@@ -5,9 +5,10 @@ Global:
   log_smooth_window: 20
   print_batch_step: 10
   save_model_dir: ./output/det_r50_vd/
-  save_epoch_step: 1200
+  save_epoch_step: 100
   eval_batch_step:
   - 0
+  - 50
   - 2000
   cal_metric_during_train: false
   pretrained_model: ./pretrain_models/ResNet50_vd_ssld_pretrained
@@ -124,7 +125,7 @@ Train:
   loader:
     shuffle: true
     drop_last: false
-    batch_size_per_card: 16
+    batch_size_per_card: 6
     num_workers: 4
 Eval:
   dataset:
@@ -163,4 +164,4 @@ Eval:
     shuffle: false
     drop_last: false
     batch_size_per_card: 1
-    num_workers: 8
+    num_workers: 2
